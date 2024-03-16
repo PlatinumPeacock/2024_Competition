@@ -15,8 +15,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import frc.robot.subsystems.LimeLight;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Arm;
+import frc.robot.commands.IntakeNote;
+import frc.robot.commands.Shoot;
+import frc.robot.commands.Feed;
+import frc.robot.commands.Climb;
+
+import frc.robot.commands.auton.Auton;
 
 public class RobotContainer {
+  
   private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
@@ -32,7 +49,50 @@ public class RobotContainer {
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
+
+
+
+
+
+  //operator controller
+  public static CommandXboxController operatorController = new CommandXboxController(Constants.Controller.OPERATOR_CONTROLLER);
+
+  //create LimeLight
+  public static final LimeLight limeLight = new LimeLight();
+    
+    
+  //create all subsystem objects
+  private final Intake intake;
+  private final Feeder feeder;
+  private final Shooter shooter;
+  private final Arm arm;
+
+
+  //create all repeatCommands (because the whileHeld() method no longer exists)
+  private final RepeatCommand intakeNote;
+  private final RepeatCommand intakeReverse;
+  private final RepeatCommand feed;
+  private final RepeatCommand feedSlow;
+  private final RepeatCommand feedReverse;
+  private final RepeatCommand shoot;
+  private final RepeatCommand shootSlow;
+  private final RepeatCommand shootReverse;
+  private final RepeatCommand climb;
+  private final RepeatCommand climbReverse;
+
+    
+
+  SendableChooser<Command> chooser = new SendableChooser<>();
+
+
+
+
+
+
+
   private void configureBindings() {
+    
+    //swerve drive button config
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
@@ -40,9 +100,14 @@ public class RobotContainer {
             .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
-    joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    joystick.rightBumper().whileTrue(drivetrain.applyRequest(() -> brake));
     joystick.b().whileTrue(drivetrain
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+    joystick.leftBumper().whileTrue(drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * 0.2) // Drive forward with
+                                                                                           // negative Y (forward)
+            .withVelocityY(-joystick.getLeftX() * 0.2) // Drive left with negative X (left)
+            .withRotationalRate(-joystick.getRightX() * 0.5) // Drive counterclockwise with negative X (left)
+        ));
 
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -51,13 +116,94 @@ public class RobotContainer {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(logger::telemeterize);
+
+
+
+
+
+
+
+    //intake buttons
+    Trigger intakeButton = operatorController.b();
+    intakeButton.whileTrue(intakeNote);
+
+    Trigger intakeReverseButton = operatorController.a();
+    intakeReverseButton.whileTrue(intakeReverse);
+
+    //feeder buttons
+    Trigger feederButton = operatorController.b();
+    feederButton.whileTrue(feed);
+
+    Trigger feedSlowButton = operatorController.y();
+    feedSlowButton.whileTrue(feedSlow);
+
+    Trigger feedReverseButton = operatorController.leftBumper();
+    feedReverseButton.whileTrue(feedReverse);
+
+    //shooter buttons
+    Trigger shootButton = operatorController.rightBumper();
+    shootButton.whileTrue(shoot);
+
+    Trigger shootSlowButton = operatorController.y();
+    shootSlowButton.whileTrue(shootSlow);
+
+    Trigger shootReverseButton = operatorController.leftBumper();
+    shootReverseButton.whileTrue(shootReverse);
+
+    //climb buttons
+    Trigger climbButton = operatorController.povUp();
+    climbButton.whileTrue(climb);
+
+    Trigger climbReverseButton = operatorController.povDown();
+    climbReverseButton.whileTrue(climbReverse);
+    
   }
 
   public RobotContainer() {
+    //new intake object and all intake commands
+    intake = new Intake();
+    intakeNote = new RepeatCommand(new IntakeNote(intake, Constants.Intake.SPEED, Constants.Intake.DIRECTION));
+    intakeNote.addRequirements(intake);
+    intakeReverse = new RepeatCommand(new IntakeNote(intake, Constants.Intake.SPEED_REVERSE, Constants.Intake.REVERSE_DIRECTION));
+    intakeReverse.addRequirements(intake);
+
+    //new feeder object and all feeder commands
+    feeder = new Feeder();
+    feed = new RepeatCommand(new Feed(feeder, Constants.Feeder.SPEED, Constants.Feeder.DIRECTION));
+    feed.addRequirements(feeder);
+    feedSlow = new RepeatCommand(new Feed(feeder, Constants.Feeder.SPEED_SLOW, Constants.Feeder.DIRECTION));
+    feedSlow.addRequirements(feeder);
+    feedReverse = new RepeatCommand(new Feed(feeder, Constants.Feeder.SPEED_REVERSE, Constants.Feeder.REVERSE_DIRECTION));
+    feedReverse.addRequirements(feeder);
+
+    //new shooter object and all shoot commands
+    shooter = new Shooter();
+    shoot = new RepeatCommand(new Shoot(shooter, Constants.Shooter.SPEED, Constants.Shooter.DIRECTION));
+    shoot.addRequirements(shooter);
+    shootSlow = new RepeatCommand(new Shoot(shooter, Constants.Shooter.SPEED_SLOW, Constants.Shooter.DIRECTION));
+    shootSlow.addRequirements(shooter);
+    shootReverse = new RepeatCommand(new Shoot(shooter, Constants.Shooter.SPEED_REVERSE, Constants.Shooter.REVERSE_DIRECTION));
+    shootReverse.addRequirements(shooter);
+
+    //new arm object and all climb commands
+    arm = new Arm();
+    climb = new RepeatCommand(new Climb(arm, Constants.Arm.SPEED, Constants.Arm.DIRECTION));
+    climb.addRequirements(arm);
+    climbReverse = new RepeatCommand(new Climb(arm, Constants.Arm.SPEED_REVERSE, Constants.Arm.REVERSE_DIRECTION));
+    climbReverse.addRequirements(arm);
+
+    Auton auton1 = new Auton(feeder, shooter, intake, 3);
+
+    chooser.setDefaultOption("Test Auto", auton1);
+ 
+    //Add choice to smart dashboard
+    SmartDashboard.putData("Autonomous", chooser);
+
+
     configureBindings();
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return chooser.getSelected();
   }
 }
