@@ -72,5 +72,9 @@ public final class Constants {
         public static final double STAGE_HEIGHT = 47.5; 
         public static final double SOURCE_HEIGHT = 48.125;
     }
+
+    public static final class Actuator {
+        public static final int SERVO = 0; //PWM port number of actuator
+    }
       
 }

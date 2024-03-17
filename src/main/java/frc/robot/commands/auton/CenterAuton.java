@@ -5,28 +5,23 @@
 package frc.robot.commands.auton;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.auton.AutoDrive;
-import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import frc.robot.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.CommandSwerveDrivetrain;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Auton extends SequentialCommandGroup {
-  /** Creates a new Auton. */
-  public Auton(Feeder f, Shooter s,  Intake i, double t) {
+public class CenterAuton extends SequentialCommandGroup {
+  /** Creates a new CenterAuton. */
+  public CenterAuton(Feeder f, Intake i, Shooter s, CommandSwerveDrivetrain dt, SwerveRequest.FieldCentric d) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new AutoIntake(f, i, t));
-    addCommands(new AutoShoot(f, s, t));
-    
+    addCommands(new AutoShoot(f, s));
+    addCommands(new DriveIntake(f, i, dt, d, 2));
+    addCommands(new AutoDrive(dt, d, f, 2));
+    addCommands(new AutoShoot(f, s));
   }
 }
- 

@@ -4,20 +4,16 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Shooter;
 
-public class AutoShoot extends Command{
+public class PositionNote extends Command{
     Feeder feeder;
-    Shooter shooter;
     private boolean finish = false;
     Timer timer;
 
-    /** Creates a new AutoShoot. */
-    public AutoShoot(Feeder f, Shooter s) {
+    /** Creates a new PositionNote. */
+    public PositionNote(Feeder f) {
     feeder = f;
     addRequirements(feeder);
-    shooter = s;
-    addRequirements(shooter);
     timer = new Timer();
     }
 
@@ -26,13 +22,9 @@ public class AutoShoot extends Command{
   public void initialize() {
     timer.reset();
     timer.start();
-    while(timer.get() < 2)
+    while(timer.get() < 0.5)
     {
-        shooter.shoot(Constants.Shooter.SPEED, Constants.Shooter.DIRECTION);
-        if (timer.get() > 1)
-        {
-            feeder.feed(Constants.Feeder.SPEED, Constants.Feeder.DIRECTION);
-        }
+        feeder.feed(Constants.Feeder.SPEED, Constants.Feeder.REVERSE_DIRECTION);
     }
     finish = true;
   }
@@ -45,7 +37,6 @@ public class AutoShoot extends Command{
   @Override
   public void end(boolean interrupted) {
     feeder.stop();
-    shooter.stop();
   }
 
   // Returns true when the command should end.

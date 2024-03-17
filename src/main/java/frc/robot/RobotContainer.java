@@ -25,12 +25,17 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Actuator;
 import frc.robot.commands.IntakeNote;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.Feed;
 import frc.robot.commands.Climb;
+//import frc.robot.commands.ExtendArm;
 
-import frc.robot.commands.auton.Auton;
+import frc.robot.commands.auton.AutonIntakeShoot;
+import frc.robot.commands.auton.AutonTestDrive;
+import frc.robot.commands.auton.AutonDriveIntake;
+import frc.robot.commands.auton.CenterAuton;
 
 public class RobotContainer {
   
@@ -66,6 +71,7 @@ public class RobotContainer {
   private final Feeder feeder;
   private final Shooter shooter;
   private final Arm arm;
+  //private final Actuator actuator;
 
 
   //create all repeatCommands (because the whileHeld() method no longer exists)
@@ -79,6 +85,7 @@ public class RobotContainer {
   private final RepeatCommand shootReverse;
   private final RepeatCommand climb;
   private final RepeatCommand climbReverse;
+  //private final RepeatCommand extendArm;
 
     
 
@@ -151,6 +158,9 @@ public class RobotContainer {
     shootReverseButton.whileTrue(shootReverse);
 
     //climb buttons
+    /*Trigger extendButton = operatorController.back();
+    extendButton.whileTrue(extendArm);*/
+
     Trigger climbButton = operatorController.povUp();
     climbButton.whileTrue(climb);
 
@@ -191,10 +201,19 @@ public class RobotContainer {
     climb.addRequirements(arm);
     climbReverse = new RepeatCommand(new Climb(arm, Constants.Arm.SPEED_REVERSE, Constants.Arm.REVERSE_DIRECTION));
     climbReverse.addRequirements(arm);
+    /*actuator = new Actuator();
+    extendArm = new RepeatCommand(new ExtendArm(actuator));
+    extendArm.addRequirements(actuator);*/
 
-    Auton auton1 = new Auton(feeder, shooter, intake, 3);
+    AutonIntakeShoot auton1 = new AutonIntakeShoot(feeder, shooter, intake, 3);
+    AutonTestDrive autonDrive = new AutonTestDrive(drivetrain, drive, feeder, 1);
+    AutonDriveIntake driveIntake = new AutonDriveIntake(feeder, intake, drivetrain, drive, 2);
+    CenterAuton centerAuton = new CenterAuton(feeder, intake, shooter, drivetrain, drive);
 
-    chooser.setDefaultOption("Test Auto", auton1);
+    chooser.setDefaultOption("Intake Shoot Auto", auton1);
+    chooser.addOption("Drive Auto", autonDrive);
+    chooser.addOption("Drive and Intake", driveIntake);
+    chooser.addOption("Center Auton", centerAuton);
  
     //Add choice to smart dashboard
     SmartDashboard.putData("Autonomous", chooser);
