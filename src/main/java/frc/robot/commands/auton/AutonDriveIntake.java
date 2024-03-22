@@ -19,7 +19,7 @@ public class AutonDriveIntake extends SequentialCommandGroup {
   public AutonDriveIntake(Feeder f, Intake i, CommandSwerveDrivetrain dt, SwerveRequest.FieldCentric d, double t) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new DriveIntake(f, i, dt, d, t));
+    addCommands(new DriveIntake(f, i, dt, d, t, -0.2));
     
   }
 }

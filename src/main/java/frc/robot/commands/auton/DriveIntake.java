@@ -25,9 +25,10 @@ public class DriveIntake extends Command{
     double time;
     private boolean finish = false;
     Timer timer;
+    double xSpeed;
 
     /** Creates a new DriveIntake. */
-    public DriveIntake(Feeder f, Intake i, CommandSwerveDrivetrain dt, SwerveRequest.FieldCentric d, double t) {
+    public DriveIntake(Feeder f, Intake i, CommandSwerveDrivetrain dt, SwerveRequest.FieldCentric d, double t, double x) {
     feeder = f;
     addRequirements(feeder);
     intake = i;
@@ -36,6 +37,7 @@ public class DriveIntake extends Command{
     drive = d;
     time = t;
     timer = new Timer();
+    xSpeed = x;
     }
 
   // Called when the command is initially scheduled.
@@ -43,16 +45,11 @@ public class DriveIntake extends Command{
   public void initialize() {
     timer.reset();
     timer.start();
-    drivetrain.setControl(drive.withVelocityX(0.1 * TunerConstants.kSpeedAt12VoltsMps) // Drive forward 
-            .withVelocityY(0 * TunerConstants.kSpeedAt12VoltsMps) // Drive left
-            .withRotationalRate(0 * 1.5 * Math.PI) // Drive counterclockwise
-        );
     while(timer.get() < time)
     {
-        //drivetrain.SwerveRequest.FieldCentric.apply(parameters, module);
         intake.intake(Constants.Intake.SPEED, Constants.Intake.DIRECTION);
         feeder.feed(Constants.Feeder.SPEED, Constants.Feeder.DIRECTION);
-        drivetrain.setControl(drive.withVelocityX(0.2 * TunerConstants.kSpeedAt12VoltsMps) // Drive forward 
+        drivetrain.setControl(drive.withVelocityX(xSpeed * TunerConstants.kSpeedAt12VoltsMps) // Drive forward 
             .withVelocityY(0 * TunerConstants.kSpeedAt12VoltsMps) // Drive left
             .withRotationalRate(0 * 1.5 * Math.PI) // Drive counterclockwise
         );

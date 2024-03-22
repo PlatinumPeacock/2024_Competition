@@ -5,21 +5,17 @@
 package frc.robot.commands.auton;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.auton.AutoDrive;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import frc.robot.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Shooter;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutonTestDrive extends SequentialCommandGroup {
-  /** Creates a new Auton. */
-  public AutonTestDrive(CommandSwerveDrivetrain dt, SwerveRequest.FieldCentric d, Feeder f, double t) {
+public class AutonShootOnly extends SequentialCommandGroup {
+  /** Creates a new AutonShootOnly. */
+  public AutonShootOnly(Feeder f, Shooter s) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new AutoDrive(dt, d, f, t));
-    
+    addCommands(new AutoShoot(f, s));
   }
 }
- 

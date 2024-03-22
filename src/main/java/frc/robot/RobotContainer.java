@@ -30,12 +30,14 @@ import frc.robot.commands.IntakeNote;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.Feed;
 import frc.robot.commands.Climb;
-//import frc.robot.commands.ExtendArm;
+import frc.robot.commands.ExtendArm;
 
 import frc.robot.commands.auton.AutonIntakeShoot;
-import frc.robot.commands.auton.AutonTestDrive;
 import frc.robot.commands.auton.AutonDriveIntake;
 import frc.robot.commands.auton.CenterAuton;
+import frc.robot.commands.auton.CenterAutonLeave;
+import frc.robot.commands.auton.AutonShootOnly;
+import frc.robot.commands.auton.BiggieCheese;
 
 public class RobotContainer {
   
@@ -71,7 +73,7 @@ public class RobotContainer {
   private final Feeder feeder;
   private final Shooter shooter;
   private final Arm arm;
-  //private final Actuator actuator;
+  private final Actuator actuator;
 
 
   //create all repeatCommands (because the whileHeld() method no longer exists)
@@ -85,7 +87,7 @@ public class RobotContainer {
   private final RepeatCommand shootReverse;
   private final RepeatCommand climb;
   private final RepeatCommand climbReverse;
-  //private final RepeatCommand extendArm;
+  private final RepeatCommand extendArm;
 
     
 
@@ -141,11 +143,14 @@ public class RobotContainer {
     Trigger feederButton = operatorController.b();
     feederButton.whileTrue(feed);
 
-    Trigger feedSlowButton = operatorController.y();
-    feedSlowButton.whileTrue(feedSlow);
+    Trigger feedOnlyButton = operatorController.y();
+    feedOnlyButton.whileTrue(feed);
 
     Trigger feedReverseButton = operatorController.leftBumper();
     feedReverseButton.whileTrue(feedReverse);
+
+    Trigger feedReversewithIntakeButton = operatorController.a();
+    feedReversewithIntakeButton.whileTrue(feedReverse);
 
     //shooter buttons
     Trigger shootButton = operatorController.rightBumper();
@@ -158,8 +163,8 @@ public class RobotContainer {
     shootReverseButton.whileTrue(shootReverse);
 
     //climb buttons
-    /*Trigger extendButton = operatorController.back();
-    extendButton.whileTrue(extendArm);*/
+    Trigger extendButton = operatorController.back();
+    extendButton.whileTrue(extendArm);
 
     Trigger climbButton = operatorController.povUp();
     climbButton.whileTrue(climb);
@@ -201,19 +206,23 @@ public class RobotContainer {
     climb.addRequirements(arm);
     climbReverse = new RepeatCommand(new Climb(arm, Constants.Arm.SPEED_REVERSE, Constants.Arm.REVERSE_DIRECTION));
     climbReverse.addRequirements(arm);
-    /*actuator = new Actuator();
+    actuator = new Actuator();
     extendArm = new RepeatCommand(new ExtendArm(actuator));
-    extendArm.addRequirements(actuator);*/
+    extendArm.addRequirements(actuator);
 
     AutonIntakeShoot auton1 = new AutonIntakeShoot(feeder, shooter, intake, 3);
-    AutonTestDrive autonDrive = new AutonTestDrive(drivetrain, drive, feeder, 1);
     AutonDriveIntake driveIntake = new AutonDriveIntake(feeder, intake, drivetrain, drive, 2);
     CenterAuton centerAuton = new CenterAuton(feeder, intake, shooter, drivetrain, drive);
+    CenterAutonLeave centerAutonLeave = new CenterAutonLeave(feeder, intake, shooter, drivetrain, drive);
+    AutonShootOnly shootOnly = new AutonShootOnly(feeder, shooter);
+    BiggieCheese biggieCheese = new BiggieCheese(feeder, intake, shooter, drivetrain, drive);
 
     chooser.setDefaultOption("Intake Shoot Auto", auton1);
-    chooser.addOption("Drive Auto", autonDrive);
     chooser.addOption("Drive and Intake", driveIntake);
-    chooser.addOption("Center Auton", centerAuton);
+    chooser.addOption("Center Auton, In Zone", centerAuton);
+    chooser.addOption("Center Auton, Exit Zone", centerAutonLeave);
+    chooser.addOption("Shoot Only", shootOnly);
+    chooser.addOption("Biggie Cheese", biggieCheese);
  
     //Add choice to smart dashboard
     SmartDashboard.putData("Autonomous", chooser);

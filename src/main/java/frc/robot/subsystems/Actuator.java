@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.PWM;
 
 
 public class Actuator extends SubsystemBase{
@@ -11,6 +12,7 @@ public class Actuator extends SubsystemBase{
     /** Creates a new Actuator. */
     public Actuator() {
         actuator = new Servo(Constants.Actuator.SERVO);
+        //actuator.setBounds(2.0, 1.8, 1.5, 1.2, 1.0); 
       }
     
       @Override
@@ -32,7 +34,7 @@ public class Actuator extends SubsystemBase{
     
       public void stop()
       {
-        
+        actuator.setSpeed(0);
       }
     
 }
