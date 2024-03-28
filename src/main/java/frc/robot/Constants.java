@@ -47,6 +47,7 @@ public final class Constants {
     public static final class Arm {
         public static final int MOTOR = 6;
         public static final double SPEED = 1;
+        public static final double SPEED_SLOW = 0.3;
         public static final double SPEED_REVERSE = 1;
         public static final int DIRECTION = 1;
         public static final int REVERSE_DIRECTION = -1;

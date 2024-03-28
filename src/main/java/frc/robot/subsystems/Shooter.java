@@ -18,6 +18,10 @@ public class Shooter extends SubsystemBase{
         upperRightMotor = new VictorSPX(Constants.Shooter.UPPER_RIGHT_SHOOTER);
         lowerLeftMotor = new VictorSPX(Constants.Shooter.LOWER_LEFT_SHOOTER);
         lowerRightMotor = new VictorSPX(Constants.Shooter.LOWER_RIGHT_SHOOTER);
+        upperLeftMotor.configOpenloopRamp(0.5, 500);
+        upperRightMotor.configOpenloopRamp(0.5, 500);
+        lowerLeftMotor.configOpenloopRamp(0.5, 500);
+        lowerRightMotor.configOpenloopRamp(0.5, 500);
       }
     
       @Override

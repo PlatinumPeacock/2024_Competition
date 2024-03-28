@@ -46,7 +46,7 @@ public class AutoDrive extends Command{
             .withRotationalRate(rSpeed * 1.5 * Math.PI) // Drive counterclockwise
         );
 
-        if (timer.get() < 0.5) 
+        if (timer.get() < 1 && timer.get() > 0.3) 
           feeder.feed(Constants.Feeder.SPEED, Constants.Feeder.REVERSE_DIRECTION); //put a loaded note into position
     }
     finish = true;

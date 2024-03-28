@@ -31,6 +31,7 @@ import frc.robot.commands.Shoot;
 import frc.robot.commands.Feed;
 import frc.robot.commands.Climb;
 import frc.robot.commands.ExtendArm;
+import frc.robot.commands.CloseActuator;
 
 import frc.robot.commands.auton.AutonIntakeShoot;
 import frc.robot.commands.auton.AutonDriveIntake;
@@ -38,6 +39,8 @@ import frc.robot.commands.auton.CenterAuton;
 import frc.robot.commands.auton.CenterAutonLeave;
 import frc.robot.commands.auton.AutonShootOnly;
 import frc.robot.commands.auton.BiggieCheese;
+import frc.robot.commands.auton.CenterAutonDelay;
+import frc.robot.commands.auton.Blue2NoteSourceExit;
 
 public class RobotContainer {
   
@@ -88,6 +91,8 @@ public class RobotContainer {
   private final RepeatCommand climb;
   private final RepeatCommand climbReverse;
   private final RepeatCommand extendArm;
+  private final RepeatCommand closeActuator;
+  private final RepeatCommand pinPull;
 
     
 
@@ -155,9 +160,9 @@ public class RobotContainer {
     //shooter buttons
     Trigger shootButton = operatorController.rightBumper();
     shootButton.whileTrue(shoot);
-
+/*
     Trigger shootSlowButton = operatorController.y();
-    shootSlowButton.whileTrue(shootSlow);
+    shootSlowButton.whileTrue(shootSlow);*/
 
     Trigger shootReverseButton = operatorController.leftBumper();
     shootReverseButton.whileTrue(shootReverse);
@@ -166,11 +171,17 @@ public class RobotContainer {
     Trigger extendButton = operatorController.back();
     extendButton.whileTrue(extendArm);
 
-    Trigger climbButton = operatorController.povUp();
-    climbButton.whileTrue(climb);
+    Trigger closeActuatorButton = operatorController.start();
+    closeActuatorButton.whileTrue(closeActuator);
+
+    /*Trigger climbButton = operatorController.povUp();
+    climbButton.whileTrue(climb);*/
 
     Trigger climbReverseButton = operatorController.povDown();
     climbReverseButton.whileTrue(climbReverse);
+
+    Trigger pinPullButton = operatorController.povLeft();
+    pinPullButton.whileTrue(pinPull);
     
   }
 
@@ -209,6 +220,10 @@ public class RobotContainer {
     actuator = new Actuator();
     extendArm = new RepeatCommand(new ExtendArm(actuator));
     extendArm.addRequirements(actuator);
+    closeActuator = new RepeatCommand(new CloseActuator(actuator));
+    closeActuator.addRequirements(actuator);
+    pinPull = new RepeatCommand(new Climb(arm, Constants.Arm.SPEED_SLOW, Constants.Arm.REVERSE_DIRECTION));
+    pinPull.addRequirements(arm);
 
     AutonIntakeShoot auton1 = new AutonIntakeShoot(feeder, shooter, intake, 3);
     AutonDriveIntake driveIntake = new AutonDriveIntake(feeder, intake, drivetrain, drive, 2);
@@ -216,6 +231,8 @@ public class RobotContainer {
     CenterAutonLeave centerAutonLeave = new CenterAutonLeave(feeder, intake, shooter, drivetrain, drive);
     AutonShootOnly shootOnly = new AutonShootOnly(feeder, shooter);
     BiggieCheese biggieCheese = new BiggieCheese(feeder, intake, shooter, drivetrain, drive);
+    CenterAutonDelay centerAutonDelay = new CenterAutonDelay(feeder, intake, shooter, drivetrain, drive);
+    Blue2NoteSourceExit blueSource = new Blue2NoteSourceExit(feeder, intake, shooter, drivetrain, drive);
 
     chooser.setDefaultOption("Intake Shoot Auto", auton1);
     chooser.addOption("Drive and Intake", driveIntake);
@@ -223,6 +240,8 @@ public class RobotContainer {
     chooser.addOption("Center Auton, Exit Zone", centerAutonLeave);
     chooser.addOption("Shoot Only", shootOnly);
     chooser.addOption("Biggie Cheese", biggieCheese);
+    chooser.addOption("Center, In Zone, With 4sec Delay", centerAutonDelay);
+    chooser.addOption("BLUE 2 Source Exit", blueSource);
  
     //Add choice to smart dashboard
     SmartDashboard.putData("Autonomous", chooser);

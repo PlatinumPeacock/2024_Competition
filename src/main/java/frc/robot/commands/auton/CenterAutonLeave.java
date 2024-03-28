@@ -19,9 +19,9 @@ public class CenterAutonLeave extends SequentialCommandGroup {
   public CenterAutonLeave(Feeder f, Intake i, Shooter s, CommandSwerveDrivetrain dt, SwerveRequest.FieldCentric d) {
     // Add your commands in the addCommands() call, e.g.
     addCommands(new AutoShoot(f, s));
-    addCommands(new DriveIntake(f, i, dt, d, 2, -0.2));
-    addCommands(new AutoDrive(dt, d, f, 2, 0.2, 0, 0));
+    addCommands(new DriveIntake(f, i, dt, d, 2, 0.2, 0, 0));
+    addCommands(new AutoDrive(dt, d, f, 2, -0.2, 0, 0));
     addCommands(new AutoShoot(f, s));
-    addCommands(new AutoDrive(dt, d, f, 2, 0.2, 0, 0));
+    addCommands(new AutoDrive(dt, d, f, 7, 0.2, 0, 0));
   }
 }

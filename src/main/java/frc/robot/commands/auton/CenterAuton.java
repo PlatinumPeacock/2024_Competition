@@ -20,8 +20,8 @@ public class CenterAuton extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new AutoShoot(f, s));
-    addCommands(new DriveIntake(f, i, dt, d, 2, -0.2));
-    addCommands(new AutoDrive(dt, d, f, 2, 0.2, 0, 0));
+    addCommands(new DriveIntake(f, i, dt, d, 2, 0.2, 0, 0));
+    addCommands(new AutoDrive(dt, d, f, 2, -0.2, 0, 0));
     addCommands(new AutoShoot(f, s));
   }
 }

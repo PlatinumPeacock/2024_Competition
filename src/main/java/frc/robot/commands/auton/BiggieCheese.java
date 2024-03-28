@@ -17,14 +17,19 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 public class BiggieCheese extends SequentialCommandGroup {
   /** Creates a new BiggieCheese. */
   public BiggieCheese(Feeder f, Intake i, Shooter s, CommandSwerveDrivetrain dt, SwerveRequest.FieldCentric d) {
+    addCommands(new AutoShoot(f, s));    
+    addCommands(new DriveOnly(dt, d, 0.1, 0, 0, 0));
+    addCommands(new DriveIntake(f, i, dt, d, 1.2, 0.4, 0, 0));
+    addCommands(new Wait());
+    addCommands(new AutoDrive(dt, d, f, 1.2, -0.4, 0, 0));
+    addCommands(new Wait());
     addCommands(new AutoShoot(f, s));
-    addCommands(new AutoDrive(dt, d, f, 1, 0.1, -0.28, 0.3));
-    addCommands(new DriveIntake(f, i, dt, d, 1.5, 0.4));
-    addCommands(new AutoDrive(dt, d, f, 1.5, -0.4, 0, 0));
-    addCommands(new AutoDrive(dt, d, f, 1, -0.1, 0.2, -0.25));
+    addCommands(new DriveOnly(dt, d, 0.9, 0.4, 0.4, 0));
+    addCommands(new DriveIntake(f, i, dt, d, 1, 0.4, 0, 0));
+    addCommands(new AutoDrive(dt, d, f, 2, -0.4, 0, 0));
+    addCommands(new DriveOnly(dt, d, 1, -0.15, -0.4, 0));
+    addCommands(new Wait());
     addCommands(new AutoShoot(f, s));
-    addCommands(new AutoDrive(dt, d, f, 1, 0.1, -0.2, 0.25));
-    addCommands(new DriveIntake(f, i, dt, d, 4, 0.5));
   }
 }
 /*

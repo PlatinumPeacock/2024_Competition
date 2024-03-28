@@ -14,6 +14,9 @@ public class Intake extends SubsystemBase{
     public Intake() {
         leftMotor = new VictorSPX(Constants.Intake.LEFT_INTAKE);
         rightMotor = new VictorSPX(Constants.Intake.RIGHT_INTAKE);
+
+        leftMotor.configOpenloopRamp(0.5, 500);
+        rightMotor.configOpenloopRamp(0.5, 500);
       }
     
       @Override

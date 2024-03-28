@@ -12,7 +12,6 @@ public class Actuator extends SubsystemBase{
     /** Creates a new Actuator. */
     public Actuator() {
         actuator = new Servo(Constants.Actuator.SERVO);
-        //actuator.setBounds(2.0, 1.8, 1.5, 1.2, 1.0); 
       }
     
       @Override
@@ -23,18 +22,14 @@ public class Actuator extends SubsystemBase{
       
       public void open()
       {
-        actuator.setSpeed(1);
+        System.out.println(actuator.getAngle());
+        actuator.setAngle(180);
+        System.out.println(actuator.getAngle());
       }
 
       public void close()
       {
-        actuator.setSpeed(-1);
-      }
-    
-    
-      public void stop()
-      {
-        actuator.setSpeed(0);
+        actuator.setAngle(50);
       }
     
 }

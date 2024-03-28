@@ -12,6 +12,7 @@ public class Feeder extends SubsystemBase{
     /** Creates a new Feeder. */
     public Feeder() {
         motor = new VictorSPX(Constants.Feeder.FEEDER);
+        motor.configOpenloopRamp(0.5, 500);
       }
     
       @Override
