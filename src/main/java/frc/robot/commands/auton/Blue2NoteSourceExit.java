@@ -28,7 +28,7 @@ public class Blue2NoteSourceExit extends SequentialCommandGroup {
     addCommands(new DriveOnly(dt, d, 1, -0.15, 0.025, -0.5));
     addCommands(new AutoShoot(f, s)); //shoot 2nd note
     addCommands(new DriveOnly(dt, d, 0.1, 0, 0, 0)); //set wheels to zero to drive straight
-    addCommands(new DriveOnly(dt, d, 1, 0.15, -0.03, 0.5));
+    addCommands(new DriveOnly(dt, d, 1.6, 0.3, -0.9, 0.85));
     addCommands(new DriveOnly(dt, d, 0.05, 0, 0, 0)); //set wheels to zero to drive straight
     addCommands(new DriveOnly(dt, d, 2, 0.5, 0.05, 0)); //leave the wing
   }

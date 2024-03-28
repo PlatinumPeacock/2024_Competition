@@ -41,6 +41,10 @@ import frc.robot.commands.auton.AutonShootOnly;
 import frc.robot.commands.auton.BiggieCheese;
 import frc.robot.commands.auton.CenterAutonDelay;
 import frc.robot.commands.auton.Blue2NoteSourceExit;
+import frc.robot.commands.auton.Tester;
+import frc.robot.commands.auton.Red2NoteSourceExit;
+import frc.robot.commands.auton.Red2NoteAmpExit;
+import frc.robot.commands.auton.Blue2NoteAmpExit;
 
 public class RobotContainer {
   
@@ -233,15 +237,23 @@ public class RobotContainer {
     BiggieCheese biggieCheese = new BiggieCheese(feeder, intake, shooter, drivetrain, drive);
     CenterAutonDelay centerAutonDelay = new CenterAutonDelay(feeder, intake, shooter, drivetrain, drive);
     Blue2NoteSourceExit blueSource = new Blue2NoteSourceExit(feeder, intake, shooter, drivetrain, drive);
+    Tester test = new Tester(feeder, intake, shooter, drivetrain, drive);
+    Red2NoteSourceExit redSource = new Red2NoteSourceExit(feeder, intake, shooter, drivetrain, drive);
+    Red2NoteAmpExit redAmp = new Red2NoteAmpExit(feeder, intake, shooter, drivetrain, drive);
+    Blue2NoteAmpExit blueAmp = new Blue2NoteAmpExit(feeder, intake, shooter, drivetrain, drive);
 
-    chooser.setDefaultOption("Intake Shoot Auto", auton1);
-    chooser.addOption("Drive and Intake", driveIntake);
-    chooser.addOption("Center Auton, In Zone", centerAuton);
-    chooser.addOption("Center Auton, Exit Zone", centerAutonLeave);
-    chooser.addOption("Shoot Only", shootOnly);
-    chooser.addOption("Biggie Cheese", biggieCheese);
-    chooser.addOption("Center, In Zone, With 4sec Delay", centerAutonDelay);
+    //chooser.setDefaultOption("Intake Shoot Auto", auton1);
+    //chooser.addOption("Drive and Intake", driveIntake);
+    //chooser.addOption("Center Auton, Exit Zone", centerAutonLeave);
+    chooser.setDefaultOption("Shoot Only", shootOnly);
+    chooser.addOption("Center Auton, In Wing", centerAuton);
+    //chooser.addOption("Biggie Cheese", biggieCheese);
+    //chooser.addOption("Center, In Zone, With 1/10sec Delay", centerAutonDelay);
     chooser.addOption("BLUE 2 Source Exit", blueSource);
+    chooser.addOption("RED 2 Source Exit", redSource);
+    //chooser.addOption("Test", test);
+    chooser.addOption("BLUE 2 Amp Exit", blueAmp);
+    chooser.addOption("RED 2 Amp Exit", redAmp);
  
     //Add choice to smart dashboard
     SmartDashboard.putData("Autonomous", chooser);
